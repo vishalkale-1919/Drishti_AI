@@ -63,7 +63,7 @@ def student_dashboard():
 
         stats = stats_map.get(sid,{"total":0, "attended": 0} )
         def unenroll_button():
-                if st.button("Unenroll from tihs course", type='tertiary', width='stretch', icon=':material/delete_forever:', key=f"unenroll_{sid}"):
+                if st.button("Unenroll from this course", type='tertiary', width='stretch', icon=':material/delete_forever:', key=f"unenroll_{sid}"):
                     unenroll_student_to_subject(student_usn, sid)
                     st.toast(f'Unenrolled from {sub['name']} successfully!')
                     st.rerun()
@@ -159,8 +159,12 @@ def student_screen():
                             voice_emb = None
                             if audio_data:
                                 voice_emb = get_voice_embedding(audio_data.read())
-                            response_data = create_student(new_name, new_usn, face_embedding=face_emb, voice_embedding=voice_emb)
-
+                            # response_data = create_student(new_name, new_usn, face_embedding=face_emb, voice_embedding=voice_emb)
+                            try:
+                                response_data = create_student(new_name, new_usn, face_embedding=face_emb, voice_embedding=voice_emb)
+                            except Exception as e:
+                                st.error(f"Registration failed: A student with USN {new_usn} may already exist.")
+                                return
                             if response_data:
                                 train_classifier()
                                 st.session_state.is_logged_in = True
@@ -170,6 +174,7 @@ def student_screen():
                                 import time
                                 time.sleep(1)
                                 st.rerun()
+                        else: st.warning("No face detected in photo. Please ensure good lighting and face the camera directly.")
                 else:
                     st.warning("Name and USN not Found")
 

@@ -5,8 +5,7 @@ from sklearn.svm import SVC
 import streamlit as st
 from src.database.db import get_all_students
 from pathlib import Path
-import sys
-from pathlib import Path    
+import sys    
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 MODEL_DIR = BASE_DIR / "models"
@@ -94,7 +93,7 @@ def get_trained_model():
     return {"clf":clf, "X":X, "y":y}
 
 def train_classifier():
-    st.cache_resource.clear()
+    get_trained_model.clear()
     model_data = get_trained_model()
     return bool(model_data)
 

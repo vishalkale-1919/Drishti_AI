@@ -50,7 +50,7 @@ def voice_attendance_dialog(selected_subject_id):
                     # Move your existing audio analysis code here.
                     pass
 
-            detected_scores = process_bulk_audio(audio_bytes, candidates_dict)
+            detected_scores = process_bulk_audio(audio_bytes, candidates_dict) or {}
 
             results, attendance_to_log  = [], []
 

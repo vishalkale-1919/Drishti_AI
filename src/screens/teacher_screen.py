@@ -192,19 +192,6 @@ def teacher_tab_take_attendance():
             voice_attendance_dialog(selected_subject_id)
 
 
-
-def teacher_tab_manage_subjects():
-    teacher_id = st.session_state.teacher_data['teacher_id']
-    col1, col2 = st.columns(2)
-    with col1:
-        st.header('Manage Subjects', width='stretch')
-
-    with col2:
-        if st.button('Create New Subject', width='stretch'):
-            create_subject_dialog(teacher_id)
-
-
-
 def teacher_tab_manage_subjects():
     teacher_id = st.session_state.teacher_data['teacher_id']
     col1, col2 = st.columns(2)
@@ -224,21 +211,20 @@ def teacher_tab_manage_subjects():
                 ("🫂", "Students", sub['total_students']),
                 ("🕰️", "Classes", sub['total_classes']),
             ]
-        def share_btn():
-            if st.button(f"Share Code: {sub['name']}", key=f"share_{sub['subject_code']}", icon=":material/share:"):
-                share_subject_dialog(sub['name'], sub['subject_code'])
-            st.space()
+            def share_btn(s=sub):
+                if st.button(f"Share Code: {s['name']}", key=f"share_{s['subject_code']}", icon=":material/share:"):
+                    share_subject_dialog(s['name'], s['subject_code'])
+                st.space()
 
-        subject_card(
-            name = sub['name'],
-            code = sub['subject_code'],
-            section = sub['section'],
-            stats=stats,
-            footer_callback=share_btn
-        )
+            subject_card(
+                name = sub['name'],
+                code = sub['subject_code'],
+                section = sub['section'],
+                stats=stats,
+                footer_callback=share_btn
+            )
     else:
         st.info("NO SUBJECTS FOUND. CREATE ONE ABOVE")
-
 
 
 def teacher_tab_attendance_records():
@@ -249,6 +235,7 @@ def teacher_tab_attendance_records():
     records = get_attendance_for_teacher(teacher_id)
 
     if not records:
+        st.info("No attendance records found yet.")
         return
     
     data = []

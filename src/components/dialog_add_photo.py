@@ -39,11 +39,14 @@ def add_photos_dialog():
         uploaded_files = st.file_uploader( 'choose image files', type=['jpg', 'png', 'jpeg' ], accept_multiple_files=True, key='dialog_upload')
 
         if uploaded_files:
-            for f in uploaded_files:
-                st.session_state.attendance_images.append(Image.open(f))
-            
-            st.toast('Photo Uploaded Successfully')
-            st.rerun()
+            if 'uploaded_filenames' not in st.session_state:
+                st.session_state.uploaded_filenames = set()
+            new_files = [f for f in uploaded_files if f.name not in st.session_state.uploaded_filenames]
+            if new_files:
+                for f in new_files:
+                    st.session_state.attendance_images.append(Image.open(f))
+                    st.session_state.uploaded_filenames.add(f.name)
+                st.toast(f"{len(new_files)} photos added!")
 
     st.divider()
     if st.button('Done', type='primary', width='stretch'):

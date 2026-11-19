@@ -23,5 +23,6 @@ def enroll_dialog():
                     st.success('Succesfully enrolled!')
                     time.sleep(1)
                     st.rerun()
+            else: st.error("Subject code not found. Please verify with your teacher.")
         else:
             st.warning('Please enter a subject code')   
